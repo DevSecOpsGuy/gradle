@@ -10,6 +10,7 @@ import configurations.BuildDistributions
 import configurations.CompileAll
 import configurations.DependenciesCheck
 import configurations.FunctionalTest
+import configurations.InstantGradleception
 import configurations.Gradleception
 import configurations.SanityCheck
 import configurations.SmokeTests
@@ -52,6 +53,7 @@ data class CIBuildModel(
             specificBuilds = listOf(
                 SpecificBuild.BuildDistributions,
                 SpecificBuild.Gradleception,
+                SpecificBuild.InstantGradleception,
                 SpecificBuild.SmokeTests),
             functionalTests = listOf(
                 TestCoverage(3, TestType.platform, Os.linux, JvmCategory.MIN_VERSION.version, vendor = JvmCategory.MIN_VERSION.vendor),
@@ -443,6 +445,11 @@ enum class SpecificBuild {
     Gradleception {
         override fun create(model: CIBuildModel, stage: Stage): BuildType {
             return Gradleception(model, stage)
+        }
+    },
+    InstantGradleception {
+        override fun create(model: CIBuildModel, stage: Stage): BuildType {
+            return InstantGradleception(model, stage)
         }
     },
     SmokeTests {
