@@ -459,6 +459,15 @@ class DefaultFileHierarchySetTest extends Specification {
         set.flatten() == [childA.absolutePath, "1:b", "2:c", "3:a", "3:b", "2:d", "1:b-c/c"]
     }
 
+    def "can add to completely different paths"() {
+        def set = FileHierarchySet.EMPTY.update(new DirectorySnapshot("/var/log", "log", [new RegularFileSnapshot("/var/log/root.txt", "root.txt", HashCode.fromInt(1234), new FileMetadata(1, 1))], HashCode.fromInt(1111)))
+        .update(new DirectorySnapshot("/usr/bin", "bin", [new RegularFileSnapshot("/usr/bin/root.txt", "root.txt", HashCode.fromInt(1234), new FileMetadata(1, 1))], HashCode.fromInt(1111)))
+
+        expect:
+        set.getSnapshot("/usr/bin").present
+        set.getSnapshot("/var/log").present
+    }
+
     private FileSystemLocationSnapshot snapshotDir(File dir) {
         directorySnapshotter.snapshot(dir.absolutePath, null, new AtomicBoolean(false))
     }
